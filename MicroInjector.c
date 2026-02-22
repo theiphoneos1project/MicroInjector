@@ -64,20 +64,20 @@ IMP HookMessage(const Class klass, const SEL selector, IMP implementation, const
     return original;
 }
 
-kern_return_t HookMemory(void *MI_NONNULL const target, const void *const MI_NONNULL data, const size_t size) {
+MicroInjectorReturn_t HookMemory(void *MI_NONNULL const target, const void *const MI_NONNULL data, const size_t size) {
     if (target == NULL || data == NULL || size == 0) {
-        return KERN_INVALID_ARGUMENT;
+        return MICROINJECTOR_PRECONDITION_FAILURE;
     }
     
     kern_return_t kr = vm_write(mach_task_self(), (vm_address_t)target, (vm_offset_t)data, size);
 
     if (kr != KERN_SUCCESS) {
-        return kr;
+        return MICROINJECTOR_MEMORY_HOOK_WRITE_FAILURE;
     }
 
     __clear_cache(target, (char *)target + size);
 
-    return KERN_SUCCESS;
+    return MICROINJECTOR_SUCCESS;
 }
 
 LoadedImageReference GetImageByName(const char *name) {
