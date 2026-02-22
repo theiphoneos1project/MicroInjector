@@ -1,6 +1,9 @@
 #include "MicroInjector.h"
 #include <objc/runtime.h>
+#include <mach-o/dyld.h>
+#include <mach-o/nlist.h>
 #include <string.h>
+#include <stdio.h>
 
 void HookMessageEx(const Class klass, const SEL selector, IMP implementation, IMP *original) {
     if (klass == NULL || selector == NULL || implementation == NULL) {
@@ -57,4 +60,78 @@ IMP HookMessage(const Class klass, const SEL selector, IMP implementation, const
     IMP original = NULL;
     HookMessageEx(klass, selector, implementation, &original);
     return original;
+}
+
+LoadedImageReference GetImageByName(const char *name) {
+    if (name == NULL) {
+        return NULL;
+    }
+
+    uint32_t const count = _dyld_image_count();
+    for (uint32_t i = 0; i < count; i++) {
+        if (strcmp(_dyld_get_image_name(i), name) == 0) {
+            return (LoadedImageReference)_dyld_get_image_header(i);
+        }
+    }
+
+    return NULL;
+}
+
+void *FindSymbol(LoadedImageReference handle, const char *name) {
+    if (name == NULL) {
+        return NULL;
+    }
+
+    uint32_t const imageCount = _dyld_image_count();
+    for (uint32_t i = 0; i < imageCount; i++) {
+        const struct mach_header *const header = _dyld_get_image_header(i);
+        if (handle != NULL && header != (struct mach_header *)handle) {
+            continue;
+        }
+
+        intptr_t const slide = _dyld_get_image_vmaddr_slide(i);
+        
+        const struct symtab_command *symtab = NULL;
+        const struct segment_command *linkedit = NULL;
+        
+        const struct load_command *lc = (const struct load_command *)(header + 1);
+        for (uint32_t j = 0; j < header->ncmds; j++) {
+            if (lc->cmd == LC_SYMTAB) {
+                symtab = (const struct symtab_command *)lc;
+            } else if (lc->cmd == LC_SEGMENT) {
+                const struct segment_command *seg = (const struct segment_command *)lc;
+                if (strcmp(seg->segname, "__LINKEDIT") == 0) {
+                    linkedit = seg;
+                }
+            }
+
+            lc = (const struct load_command *)((uintptr_t)lc + lc->cmdsize);
+        }
+        
+        if (symtab == NULL || linkedit == NULL) {
+            continue;
+        }
+        
+        uintptr_t const linkeditBase = (uintptr_t)slide + linkedit->vmaddr - linkedit->fileoff;
+        const struct nlist *const symbols = (const struct nlist *)(linkeditBase + symtab->symoff);
+        const char *const strtab = (const char *)(linkeditBase + symtab->stroff);
+
+        for (uint32_t j = 0; j < symtab->nsyms; j++) {
+            if (symbols[j].n_value == 0) {
+                continue;
+            }
+            
+            const char *const symbolName = strtab + symbols[j].n_un.n_strx;
+
+            if (strcmp(symbolName, name) == 0) {
+                return (void *)(symbols[j].n_value + slide);
+            }
+        }
+
+        if (handle != NULL) {
+            break;
+        }
+    }
+
+    return NULL;
 }

@@ -19,11 +19,22 @@ extern "C" {
 
 void HookMessageEx(MI_NONNULL const Class klass, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
 
-__deprecated_msg(
+__attribute__((deprecated(
     "HookMessage is deprecated and is only implementated for backwards-compatibility. "
     "DEVELOPERS SHOULD NOT USE THIS API. More info: https://www.cydiasubstrate.com/api/c/MSHookMessage/"
-)
+)))
 MI_NULLABLE IMP HookMessage(MI_NONNULL const Class klass, MI_NONNULL SEL selector, MI_NONNULL IMP implementation, const char *MI_NULLABLE prefix); 
+
+typedef const void *LoadedImageReference;
+MI_NULLABLE LoadedImageReference GetImageByName(const char *MI_NONNULL name);
+
+/**
+ * Find a symbol by name in a loaded image, walking the Mach-O table directly.
+ * @param handle    Handle to a loaded image, or NULL to search all images
+ * @param name      Symbol name with leading underscore (e.g. "_myFunction")
+ * @return          Address of symbol or NULL if not found
+ */
+void *MI_NULLABLE FindSymbol(MI_NULLABLE LoadedImageReference handle, const char *MI_NONNULL name);
 
 #ifdef __cplusplus
 }
