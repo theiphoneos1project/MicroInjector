@@ -34,19 +34,47 @@ typedef enum {
     MICROINJECTOR_FUNCTION_HOOK_REMAP_FAILURE = 8
 } MicroInjectorReturn_t;
 
+/**
+ * Hook Objective-C method.
+ * @param klass             Class in which the selector resides
+ * @param selector          Name of selector
+ * @param implementation    New implementation of method
+ * @param original          Pointer to original implementation
+ * @return                  Status of hook
+ */
 MicroInjectorReturn_t HookMessageEx(MI_NONNULL const Class klass, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
 
 __attribute__((deprecated(
-    "HookMessage is deprecated and is only implementated for backwards-compatibility. "
+    "HookMessage is deprecated and is only implemented for backwards-compatibility. "
     "DEVELOPERS SHOULD NOT USE THIS API. More info: https://www.cydiasubstrate.com/api/c/MSHookMessage/"
 )))
 MI_NULLABLE IMP HookMessage(MI_NONNULL const Class klass, MI_NONNULL SEL selector, MI_NONNULL IMP implementation, const char *MI_NULLABLE prefix); 
 
+/**
+ * Hook arbitrary memory.
+ * @param target    Target of memory to be hooked
+ * @param data      Replacement memory
+ * @param size      Size of memory
+ * @return          Status of hook
+ */
 MicroInjectorReturn_t HookMemory(void *MI_NONNULL const target, const void *const MI_NONNULL data, const size_t size);
 
-MicroInjectorReturn_t HookFunction(void *MI_NONNULL const target, const void *MI_NONNULL const replacement, void *MI_NULLABLE *MI_NULLABLE original);
+/**
+ * Hook C function.
+ * @param target        Symbol to be hooked
+ * @param replacement   Replacement hook C function
+ * @param original      Pointer to original function
+ * @return              Status of hook
+ */
+MicroInjectorReturn_t HookFunction(void *MI_NONNULL const target, void *MI_NONNULL const replacement, void *MI_NULLABLE *MI_NULLABLE original);
 
 typedef const void *LoadedImageReference;
+
+/**
+ * Find a loaded image by name.
+ * @param name      Full path to binary on disk
+ * @return          Reference to image or NULL if not found
+ */
 MI_NULLABLE LoadedImageReference GetImageByName(const char *MI_NONNULL name);
 
 /**

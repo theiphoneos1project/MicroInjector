@@ -135,7 +135,7 @@ static void install_hook(void *const from, const void *const to, MicroInjectorHo
     }
 }
 
-MicroInjectorReturn_t HookFunction(void *const target, const void *const replacement, void **original) {
+MicroInjectorReturn_t HookFunction(void *const target, void *const replacement, void **original) {
     if (target == NULL || replacement == NULL) {
         return MICROINJECTOR_PRECONDITION_FAILURE;
     }
@@ -143,7 +143,7 @@ MicroInjectorReturn_t HookFunction(void *const target, const void *const replace
     MicroInjectorHookInfo_t info = {0};
     
     if (init_hook_info(target, replacement, (original != NULL), &info) != 0) {
-        return MICROINJECTOR_HOOK_NO_VALID_TYPE;
+        return MICROINJECTOR_FUNCTION_HOOK_NO_VALID_TYPE;
     }
     
     if (original != NULL) {
@@ -153,7 +153,7 @@ MicroInjectorReturn_t HookFunction(void *const target, const void *const replace
         
         kern_return_t kr = vm_allocate(mach_task_self(), &trampolineBase, trampolineSize, VM_FLAGS_ANYWHERE);
         if (kr != KERN_SUCCESS) {
-            return MICROINJECTOR_HOOK_TRAMPOLINE_ALLOCATION_FAILURE;
+            return MICROINJECTOR_FUNCTION_HOOK_TRAMPOLINE_ALLOCATION_FAILURE;
         }
 
         bcopy(THUMB_ALIGN(target), (void *)trampolineBase, info.size);
@@ -176,7 +176,7 @@ MicroInjectorReturn_t HookFunction(void *const target, const void *const replace
 
         if (kr != KERN_SUCCESS) {
             vm_deallocate(mach_task_self(), trampolineBase, trampolineSize);
-            return MICROINJECTOR_HOOK_TRAMPOLINE_PROTECT_FAILURE;
+            return MICROINJECTOR_FUNCTION_HOOK_TRAMPOLINE_PROTECT_FAILURE;
         }
 
         __clear_cache((void *)trampolineBase, (void *)trampolineSize);
@@ -191,7 +191,7 @@ MicroInjectorReturn_t HookFunction(void *const target, const void *const replace
     vm_address_t newPage = 0;
     kern_return_t kr = vm_allocate(mach_task_self(), &newPage, ARM_PAGE_SIZE, VM_FLAGS_ANYWHERE);
     if (kr != KERN_SUCCESS) {
-        return MICROINJECTOR_HOOK_PAGE_ALLOCATION_FAILURE;
+        return MICROINJECTOR_FUNCTION_HOOK_PAGE_ALLOCATION_FAILURE;
     }
 
     bcopy((void *)VM_PAGE_OF(target), (void *)newPage, ARM_PAGE_SIZE);
@@ -209,7 +209,7 @@ MicroInjectorReturn_t HookFunction(void *const target, const void *const replace
             *original = NULL;
         }
 
-        return MICROINJECTOR_HOOK_REMAP_FAILURE;
+        return MICROINJECTOR_FUNCTION_HOOK_REMAP_FAILURE;
     }
 
     __clear_cache(THUMB_ALIGN(target), (void *)SIZE_ALIGN(info.size + 0x10));
