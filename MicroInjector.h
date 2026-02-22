@@ -20,8 +20,16 @@ extern "C" {
 
 typedef enum {
     MICROINJECTOR_SUCCESS = 0,
+
     MICROINJECTOR_PRECONDITION_FAILURE = 1,
-    MICROINJECTOR_METHOD_NOT_FOUND = 2
+    
+    MICROINJECTOR_METHOD_NOT_FOUND = 2,
+
+    MICROINJECTOR_HOOK_NO_VALID_TYPE = 3,
+    MICROINJECTOR_HOOK_TRAMPOLINE_ALLOCATION_FAILURE = 4,
+    MICROINJECTOR_HOOK_TRAMPOLINE_PROTECT_FAILURE = 5,
+    MICROINJECTOR_HOOK_PAGE_ALLOCATION_FAILURE = 6,
+    MICROINJECTOR_HOOK_REMAP_FAILURE = 7
 } MicroInjectorReturn_t;
 
 MicroInjectorReturn_t HookMessageEx(MI_NONNULL const Class klass, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
@@ -33,6 +41,8 @@ __attribute__((deprecated(
 MI_NULLABLE IMP HookMessage(MI_NONNULL const Class klass, MI_NONNULL SEL selector, MI_NONNULL IMP implementation, const char *MI_NULLABLE prefix); 
 
 kern_return_t HookMemory(void *MI_NONNULL const target, const void *const MI_NONNULL data, const size_t size);
+
+MicroInjectorReturn_t HookFunction(void *MI_NONNULL const target, const void *MI_NONNULL const replacement, void *MI_NULLABLE *MI_NULLABLE original);
 
 typedef const void *LoadedImageReference;
 MI_NULLABLE LoadedImageReference GetImageByName(const char *MI_NONNULL name);
