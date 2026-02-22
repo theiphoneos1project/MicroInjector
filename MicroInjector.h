@@ -18,7 +18,13 @@ extern "C" {
 #define MI_NULL_UNSPECIFIED
 #endif // defined(__clang__) && __has_feature(nullability)
 
-void HookMessageEx(MI_NONNULL const Class klass, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
+typedef enum {
+    MICROINJECTOR_SUCCESS = 0,
+    MICROINJECTOR_PRECONDITION_FAILURE = 1,
+    MICROINJECTOR_METHOD_NOT_FOUND = 2
+} MicroInjectorReturn_t;
+
+MicroInjectorReturn_t HookMessageEx(MI_NONNULL const Class klass, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
 
 __attribute__((deprecated(
     "HookMessage is deprecated and is only implementated for backwards-compatibility. "

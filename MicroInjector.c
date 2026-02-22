@@ -5,14 +5,14 @@
 #include <string.h>
 #include <stdio.h>
 
-void HookMessageEx(const Class klass, const SEL selector, IMP implementation, IMP *original) {
+MicroInjectorReturn_t HookMessageEx(const Class klass, const SEL selector, IMP implementation, IMP *original) {
     if (klass == NULL || selector == NULL || implementation == NULL) {
-        return;
+        return MICROINJECTOR_PRECONDITION_FAILURE;
     }
 
     Method const method = class_getInstanceMethod(klass, selector);
     if (method == NULL) {
-        return;
+        return MICROINJECTOR_METHOD_NOT_FOUND;
     }
 
     if (original == NULL) {
@@ -27,6 +27,8 @@ void HookMessageEx(const Class klass, const SEL selector, IMP implementation, IM
             *original = method_setImplementation(method, implementation);
         }
     }
+
+    return MICROINJECTOR_SUCCESS;
 }
 
 IMP HookMessage(const Class klass, const SEL selector, IMP implementation, const char *prefix) {
