@@ -2,6 +2,7 @@
 #define MICROINJECTOR_H
 
 #include <objc/objc.h>
+#include <mach/mach.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +25,8 @@ __attribute__((deprecated(
     "DEVELOPERS SHOULD NOT USE THIS API. More info: https://www.cydiasubstrate.com/api/c/MSHookMessage/"
 )))
 MI_NULLABLE IMP HookMessage(MI_NONNULL const Class klass, MI_NONNULL SEL selector, MI_NONNULL IMP implementation, const char *MI_NULLABLE prefix); 
+
+kern_return_t HookMemory(void *MI_NONNULL const target, const void *const MI_NONNULL data, const size_t size);
 
 typedef const void *LoadedImageReference;
 MI_NULLABLE LoadedImageReference GetImageByName(const char *MI_NONNULL name);

@@ -62,6 +62,22 @@ IMP HookMessage(const Class klass, const SEL selector, IMP implementation, const
     return original;
 }
 
+kern_return_t HookMemory(void *MI_NONNULL const target, const void *const MI_NONNULL data, const size_t size) {
+    if (target == NULL || data == NULL || size == 0) {
+        return KERN_INVALID_ARGUMENT;
+    }
+    
+    kern_return_t kr = vm_write(mach_task_self(), (vm_address_t)target, (vm_offset_t)data, size);
+
+    if (kr != KERN_SUCCESS) {
+        return kr;
+    }
+
+    __clear_cache(target, (char *)target + size);
+
+    return KERN_SUCCESS;
+}
+
 LoadedImageReference GetImageByName(const char *name) {
     if (name == NULL) {
         return NULL;
