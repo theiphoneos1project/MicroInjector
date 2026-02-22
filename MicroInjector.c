@@ -5,12 +5,12 @@
 #include <string.h>
 #include <stdio.h>
 
-MicroInjectorReturn_t HookMessageEx(const Class klass, const SEL selector, IMP implementation, IMP *original) {
-    if (klass == NULL || selector == NULL || implementation == NULL) {
+MicroInjectorReturn_t HookMessageEx(const Class cls, const SEL selector, IMP implementation, IMP *original) {
+    if (cls == NULL || selector == NULL || implementation == NULL) {
         return MICROINJECTOR_PRECONDITION_FAILURE;
     }
 
-    Method const method = class_getInstanceMethod(klass, selector);
+    Method const method = class_getInstanceMethod(cls, selector);
     if (method == NULL) {
         return MICROINJECTOR_METHOD_NOT_FOUND;
     }
@@ -21,7 +21,7 @@ MicroInjectorReturn_t HookMessageEx(const Class klass, const SEL selector, IMP i
         IMP const oldImplementation = method_getImplementation(method);
         const char *const typeEncoding = method_getTypeEncoding(method);
 
-        if (class_addMethod(klass, selector, implementation, typeEncoding)) {
+        if (class_addMethod(cls, selector, implementation, typeEncoding)) {
             *original = oldImplementation;
         } else {
             *original = method_setImplementation(method, implementation);
@@ -31,12 +31,12 @@ MicroInjectorReturn_t HookMessageEx(const Class klass, const SEL selector, IMP i
     return MICROINJECTOR_SUCCESS;
 }
 
-IMP HookMessage(const Class klass, const SEL selector, IMP implementation, const char *prefix) {
-    if (klass == NULL || selector == NULL || implementation == NULL) {
+IMP HookMessage(const Class cls, const SEL selector, IMP implementation, const char *prefix) {
+    if (cls == NULL || selector == NULL || implementation == NULL) {
         return NULL;
     }
 
-    Method const method = class_getInstanceMethod(klass, selector);
+    Method const method = class_getInstanceMethod(cls, selector);
     if (method == NULL) {
         return NULL;
     }
@@ -54,13 +54,13 @@ IMP HookMessage(const Class klass, const SEL selector, IMP implementation, const
         bcopy(prefix, renamedName, prefixLength);
         bcopy(name, renamedName + prefixLength, nameLength + 1);
 
-        class_addMethod(klass, sel_registerName(renamedName), original, typeEncoding);
+        class_addMethod(cls, sel_registerName(renamedName), original, typeEncoding);
         method_setImplementation(method, implementation);
         return NULL;
     }
 
     IMP original = NULL;
-    HookMessageEx(klass, selector, implementation, &original);
+    HookMessageEx(cls, selector, implementation, &original);
     return original;
 }
 

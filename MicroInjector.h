@@ -36,19 +36,19 @@ typedef enum {
 
 /**
  * Hook Objective-C method.
- * @param klass             Class in which the selector resides
+ * @param cls             Class in which the selector resides
  * @param selector          Name of selector
  * @param implementation    New implementation of method
  * @param original          Pointer to original implementation
  * @return                  Status of hook
  */
-MicroInjectorReturn_t HookMessageEx(MI_NONNULL const Class klass, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
+MicroInjectorReturn_t HookMessageEx(MI_NONNULL const Class cls, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
 
 __attribute__((deprecated(
     "HookMessage is deprecated and is only implemented for backwards-compatibility. "
     "DEVELOPERS SHOULD NOT USE THIS API. More info: https://www.cydiasubstrate.com/api/c/MSHookMessage/"
 )))
-MI_NULLABLE IMP HookMessage(MI_NONNULL const Class klass, MI_NONNULL SEL selector, MI_NONNULL IMP implementation, const char *MI_NULLABLE prefix); 
+MI_NULLABLE IMP HookMessage(MI_NONNULL const Class cls, MI_NONNULL SEL selector, MI_NONNULL IMP implementation, const char *MI_NULLABLE prefix); 
 
 /**
  * Hook arbitrary memory.
