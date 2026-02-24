@@ -5,6 +5,7 @@
 #include <mach-o/nlist.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 
 MicroInjectorReturn_t HookMessageEx(const Class cls, const SEL selector, IMP implementation, IMP *original) {
     if (cls == NULL || selector == NULL || implementation == NULL) {
@@ -65,7 +66,7 @@ IMP HookMessage(const Class cls, const SEL selector, IMP implementation, const c
     return original;
 }
 
-MicroInjectorReturn_t HookMemory(void *MI_NONNULL const target, const void *const MI_NONNULL data, const size_t size) {
+MicroInjectorReturn_t HookMemory(void *const target, const void *const data, const size_t size) {
     if (target == NULL || data == NULL || size == 0) {
         return MICROINJECTOR_PRECONDITION_FAILURE;
     }
@@ -74,6 +75,20 @@ MicroInjectorReturn_t HookMemory(void *MI_NONNULL const target, const void *cons
     
     const vm_address_t targetPage = VM_PAGE_OF(target);
     const vm_address_t offset = (vm_address_t)target - targetPage;
+
+    // Without vm_region, dyld may race with the remap and win
+    vm_address_t addr = targetPage;
+    vm_size_t regionSize = 0;
+    vm_region_basic_info_data_t info;
+    mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT;
+    mach_port_t object;
+    vm_region(mach_task_self(), &addr, &regionSize, VM_REGION_BASIC_INFO, (vm_region_info_t)&info, &count, &object);
+
+    kr = vm_protect(mach_task_self(), targetPage, ARM_PAGE_SIZE, FALSE, VM_PROT_READ | VM_PROT_WRITE | VM_PROT_COPY);
+
+    if (kr == KERN_SUCCESS) {
+        *(volatile uint32_t *)targetPage = *(volatile uint32_t *)targetPage;
+    }
 
     vm_address_t newPage = 0;
 
@@ -95,6 +110,8 @@ MicroInjectorReturn_t HookMemory(void *MI_NONNULL const target, const void *cons
         vm_deallocate(mach_task_self(), newPage, ARM_PAGE_SIZE);
         return MICROINJECTOR_MEMORY_HOOK_REMAP_FAILURE;
     }
+
+    vm_deallocate(mach_task_self(), newPage, ARM_PAGE_SIZE);
 
     __clear_cache(target, (char *)target + size);
     return MICROINJECTOR_SUCCESS;
