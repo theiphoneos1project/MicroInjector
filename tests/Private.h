@@ -31,3 +31,4 @@ typedef struct {
 
 void HookMessageExTests(void);
 void HookMemoryTests(void);
+void HookFunctionTests(void);
