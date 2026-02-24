@@ -36,7 +36,7 @@ typedef enum {
 
 /**
  * Hook Objective-C method.
- * @param cls             Class in which the selector resides
+ * @param cls               Class in which the selector resides
  * @param selector          Name of selector
  * @param implementation    New implementation of method
  * @param original          Pointer to original implementation
