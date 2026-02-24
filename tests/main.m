@@ -12,6 +12,38 @@ int main(void) {
         NSLog(@"END HookMessageEx tests");
     }
 
+    NSLog(@"============================");
+
+    {
+        NSLog(@"START HookMemory tests");
+        HookMemoryTests();
+        NSLog(@"END HookMemory tests");
+    }
+
+    // NSLog(@"============================");
+
+    // {
+    //     NSLog(@"START HookFunction tests");
+        
+    //     NSLog(@"END HookFunction tests");
+    // }
+
+    // NSLog(@"============================");
+
+    // {
+    //     NSLog(@"START GetImageByName tests");
+        
+    //     NSLog(@"END GetImageByName tests");
+    // }
+
+    // NSLog(@"============================");
+
+    // {
+    //     NSLog(@"START FindSymbol tests");
+        
+    //     NSLog(@"END FindSymbol tests");
+    // }
+
     NSLog(@"============================");    
     NSLog(@"Passed all tests!");    
 

@@ -1,4 +1,5 @@
 #include "MicroInjector.h"
+#include "MicroInjectorInternal.h"
 #include <objc/runtime.h>
 #include <mach-o/dyld.h>
 #include <mach-o/nlist.h>
@@ -68,15 +69,34 @@ MicroInjectorReturn_t HookMemory(void *MI_NONNULL const target, const void *cons
     if (target == NULL || data == NULL || size == 0) {
         return MICROINJECTOR_PRECONDITION_FAILURE;
     }
-    
-    kern_return_t kr = vm_write(mach_task_self(), (vm_address_t)target, (vm_offset_t)data, size);
 
+    kern_return_t kr;
+    
+    const vm_address_t targetPage = VM_PAGE_OF(target);
+    const vm_address_t offset = (vm_address_t)target - targetPage;
+
+    vm_address_t newPage = 0;
+
+    kr = vm_allocate(mach_task_self(), &newPage, ARM_PAGE_SIZE, VM_FLAGS_ANYWHERE);
     if (kr != KERN_SUCCESS) {
-        return MICROINJECTOR_MEMORY_HOOK_WRITE_FAILURE;
+        return MICROINJECTOR_MEMORY_HOOK_ALLOCATION_FAILURE;
+    }
+
+    bcopy((void *)targetPage, (void *)newPage, ARM_PAGE_SIZE);
+    bcopy(data, (void *)(newPage + offset), size);
+
+    vm_prot_t currentProtection = VM_PROT_NONE;
+    vm_prot_t maxProtection = VM_PROT_NONE;
+    vm_address_t remapAddress = targetPage;
+
+    vm_deallocate(mach_task_self(), targetPage, ARM_PAGE_SIZE);
+    kr = vm_remap(mach_task_self(), &remapAddress, ARM_PAGE_SIZE, 0, VM_FLAGS_FIXED, mach_task_self(), newPage, TRUE, &currentProtection, &maxProtection, VM_INHERIT_COPY);
+    if (kr != KERN_SUCCESS) {
+        vm_deallocate(mach_task_self(), newPage, ARM_PAGE_SIZE);
+        return MICROINJECTOR_MEMORY_HOOK_REMAP_FAILURE;
     }
 
     __clear_cache(target, (char *)target + size);
-
     return MICROINJECTOR_SUCCESS;
 }
 

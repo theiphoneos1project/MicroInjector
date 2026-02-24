@@ -30,3 +30,4 @@ typedef struct {
 @end
 
 void HookMessageExTests(void);
+void HookMemoryTests(void);
