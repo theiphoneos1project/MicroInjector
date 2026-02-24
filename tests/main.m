@@ -30,6 +30,12 @@ int main(void) {
 
     NSLog(@"============================");
 
+    {
+        NSLog(@"START GetImageByName tests");
+        GetImageByNameTests();
+        NSLog(@"END GetImageByName tests");
+    }
+
     NSLog(@"============================");    
     NSLog(@"Passed all tests!");    
 
