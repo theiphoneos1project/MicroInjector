@@ -33,3 +33,4 @@ void HookMessageExTests(void);
 void HookMemoryTests(void);
 void HookFunctionTests(void);
 void GetImageByNameTests(void);
+void FindSymbolTests(void);

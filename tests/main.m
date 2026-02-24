@@ -36,6 +36,14 @@ int main(void) {
         NSLog(@"END GetImageByName tests");
     }
 
+    NSLog(@"============================");
+
+    {
+        NSLog(@"START FindSymbol tests");
+        FindSymbolTests();
+        NSLog(@"END FindSymbol tests");
+    }
+
     NSLog(@"============================");    
     NSLog(@"Passed all tests!");    
 
