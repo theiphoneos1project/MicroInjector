@@ -4,10 +4,13 @@
 #include <dlfcn.h>
 
 void HookMemoryTests(void) {
-    NSBundle *const bundle = [NSBundle bundleWithPath:@"/System/Library/Frameworks/Preferences.framework"];
-    assert(bundle != NULL);
+    NSBundle *const preferencesBundle = [NSBundle bundleWithPath:@"/System/Library/Frameworks/Preferences.framework"];
+    assert(preferencesBundle != NULL);
+    assert([preferencesBundle load]);
     
-    assert([bundle load]);
+    NSBundle *const crashReporterBundle = [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/CrashReporterSupport.framework"];
+    assert(crashReporterBundle != NULL);
+    assert([crashReporterBundle load]);
 
     // Hook global variable
     {
@@ -24,22 +27,20 @@ void HookMemoryTests(void) {
     }
 
     // Patching executable code
-    {
-        pid_t (*orig_getpid)(void) = (__typeof__(orig_getpid))dlsym(RTLD_DEFAULT, "getpid");
-        assert(orig_getpid != NULL); 
-
-        const pid_t realPid = getpid();
-
+    {   
+        BOOL (*CRSubmitProblemReport)(void) = (__typeof__(CRSubmitProblemReport))dlsym(RTLD_DEFAULT, "CRSubmitProblemReport");
+        assert(CRSubmitProblemReport != NULL);
+        assert(CRSubmitProblemReport() == NO);
+        
         const uint8_t patch[] = {
-            0x39, 0x00, 0xA0, 0xE3, // mov r0, #57
-            0x1E, 0xFF, 0x2F, 0xE1 // bx lr
+            0x01, 0x00, 0xA0, 0xE3, // mov r0, #1
+            0x1E, 0xFF, 0x2F, 0xE1  // bx lr
         };
-
-        MicroInjectorReturn_t hookStatus = HookMemory((void *)orig_getpid, patch, sizeof(patch));
+        
+        MicroInjectorReturn_t hookStatus = HookMemory((void *)CRSubmitProblemReport, patch, sizeof(patch));
         assert(hookStatus == MICROINJECTOR_SUCCESS);
 
-        assert(getpid() == 57);
-        assert(getpid() != realPid);
+        assert(CRSubmitProblemReport() == YES);
     }
 
     // Precondition failures
