@@ -1,7 +1,10 @@
 #include "MicroInjector.h"
 #include <objc/runtime.h>
+#include <stdlib.h>
 
 #define MI_EXPORT __attribute__((visibility("default"), used))
+
+static void hook_method_list(Class target, Class hook, Class old);
 
 typedef const void *MSImageRef;
 
@@ -62,4 +65,41 @@ IMP MSHookMessage(Class _class, SEL sel, IMP imp, const char *prefix) {
     IMP original = NULL;
     HookMessageEx(_class, sel, imp, &original);
     return original;
+}
+
+MI_EXPORT
+void MSHookClassPair(Class target, Class hook, Class old) {
+    if (target == NULL || hook == NULL || old == NULL) {
+        return;
+    }
+
+    // Instance methods
+    hook_method_list(target, hook, old);
+    // Class methods
+    hook_method_list(object_getClass((id)target), object_getClass((id)hook), object_getClass((id)old));
+}
+
+/* === Private utility functions === */
+
+static void hook_method_list(Class target, Class hook, Class old) {
+    unsigned int methodCount = 0;
+    Method *const methods = class_copyMethodList(hook, &methodCount);
+    
+    for (unsigned int i = 0; i < methodCount; i++) {
+        const Method method = methods[i];
+        const SEL selector = method_getName(method);
+        const IMP hookImplementation = method_getImplementation(method);
+        const char *const typeEncoding = method_getTypeEncoding(method);
+        
+        const Method original = class_getInstanceMethod(target, selector);
+        if (original != NULL) {
+            class_addMethod(old, selector, method_getImplementation(original), typeEncoding);
+        } 
+        
+        if (!class_addMethod(target, selector, hookImplementation, typeEncoding)) {
+            method_setImplementation(original, hookImplementation);
+        }
+    }
+
+    free((void *)methods);
 }
