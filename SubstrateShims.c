@@ -8,6 +8,9 @@
 
 static void hook_method_list(Class target, Class hook, Class old);
 
+__attribute__((noreturn))
+static void trap_noreturn(void);
+
 typedef const void *MSImageRef;
 typedef struct mach_header MSImageHeader;
 
@@ -96,27 +99,27 @@ MSImageRef MSMapImage(__unused const char *file) {
 MICROINJECTOR_API
 const MSImageHeader *MSImageAddress(__unused MSImageRef image) {
     fprintf(stderr, "MicroInjector: MSImageAddress is not implemented\n");
-    __builtin_trap();
+    trap_noreturn();
     return NULL;
 }
 
 MICROINJECTOR_API
 void MSCloseImage(__unused MSImageRef image) {
     fprintf(stderr, "MicroInjector: MSCloseImage is not implemented\n");
-    __builtin_trap();
+    trap_noreturn();
 }
 
 MICROINJECTOR_API
 char *MSFindAddress(__unused MSImageRef image, __unused void **address) {
     fprintf(stderr, "MicroInjector: MSFindAddress is not implemented\n");
-    __builtin_trap();
+    trap_noreturn();
     return NULL;
 }
 
 MICROINJECTOR_API
 bool MSHookProcess(__unused pid_t pid, __unused const char *library) {
     fprintf(stderr, "MicroInjector: MSHookProcess is not implemented\n");
-    __builtin_trap();
+    trap_noreturn();
     return false;
 }
 
@@ -143,4 +146,10 @@ static void hook_method_list(Class target, Class hook, Class old) {
     }
 
     free((void *)methods);
+}
+
+__attribute__((noreturn))
+static void trap_noreturn(void) {
+    __builtin_trap();
+    __builtin_unreachable();
 }
