@@ -33,39 +33,6 @@ MicroInjectorReturn_t HookMessageEx(const Class cls, const SEL selector, IMP imp
     return MICROINJECTOR_SUCCESS;
 }
 
-IMP HookMessage(const Class cls, const SEL selector, IMP implementation, const char *prefix) {
-    if (cls == NULL || selector == NULL || implementation == NULL) {
-        return NULL;
-    }
-
-    Method const method = class_getInstanceMethod(cls, selector);
-    if (method == NULL) {
-        return NULL;
-    }
-
-    if (prefix != NULL) {
-        const char *const name = sel_getName(selector);
-        const char *const typeEncoding = method_getTypeEncoding(method);
-        
-        IMP const original = method_getImplementation(method);
-
-        const size_t prefixLength = strlen(prefix);
-        const size_t nameLength = strlen(name);
-
-        char renamedName[prefixLength + nameLength + 1];
-        bcopy(prefix, renamedName, prefixLength);
-        bcopy(name, renamedName + prefixLength, nameLength + 1);
-
-        class_addMethod(cls, sel_registerName(renamedName), original, typeEncoding);
-        method_setImplementation(method, implementation);
-        return NULL;
-    }
-
-    IMP original = NULL;
-    HookMessageEx(cls, selector, implementation, &original);
-    return original;
-}
-
 MicroInjectorReturn_t HookMemory(void *const target, const void *const data, const size_t size) {
     if (target == NULL || data == NULL || size == 0) {
         return MICROINJECTOR_PRECONDITION_FAILURE;

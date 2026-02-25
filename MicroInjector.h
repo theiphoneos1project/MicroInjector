@@ -45,12 +45,6 @@ typedef enum {
  */
 MicroInjectorReturn_t HookMessageEx(MI_NONNULL const Class cls, MI_NONNULL const SEL selector, MI_NONNULL IMP implementation, MI_NULLABLE IMP *MI_NULLABLE original);
 
-__attribute__((deprecated(
-    "HookMessage is deprecated and is only implemented for backwards-compatibility. "
-    "DEVELOPERS SHOULD NOT USE THIS API. More info: https://www.cydiasubstrate.com/api/c/MSHookMessage/"
-)))
-MI_NULLABLE IMP HookMessage(MI_NONNULL const Class cls, MI_NONNULL SEL selector, MI_NONNULL IMP implementation, const char *MI_NULLABLE prefix); 
-
 /**
  * Hook arbitrary memory.
  * @param target    Target of memory to be hooked
