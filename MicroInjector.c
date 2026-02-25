@@ -157,3 +157,32 @@ void *FindSymbol(LoadedImageReference handle, const char *name) {
 
     return NULL;
 }
+
+const char *MicroInjectorErrorToString(MicroInjectorReturn_t status) {
+    switch (status) {
+        case MICROINJECTOR_SUCCESS: 
+            return "(MicroInjector) Success";
+        case MICROINJECTOR_PRECONDITION_FAILURE: 
+            return "(MicroInjector) Failed to satisfy preconditions";
+        case MICROINJECTOR_METHOD_NOT_FOUND: 
+            return "(MicroInjector) Method not found";
+        case MICROINJECTOR_MEMORY_HOOK_ALLOCATION_FAILURE: 
+            return "(MicroInjector) Failed to allocate in memory hook";
+        case MICROINJECTOR_MEMORY_HOOK_REMAP_FAILURE: 
+            return "(MicroInjector) Failed to remap in memory hook";
+        case MICROINJECTOR_FUNCTION_HOOK_NO_VALID_TYPE: 
+            return "(MicroInjector) No valid type for function hook";
+        case MICROINJECTOR_FUNCTION_HOOK_TRAMPOLINE_ALLOCATION_FAILURE: 
+            return "(MicroInjector) Failed to allocate trampoline in function hook";
+        case MICROINJECTOR_FUNCTION_HOOK_TRAMPOLINE_PROTECT_FAILURE: 
+            return "(MicroInjector) Failed to protect trampoline in function hook";
+        case MICROINJECTOR_FUNCTION_HOOK_PAGE_ALLOCATION_FAILURE: 
+            return "(MicroInjector) Failed to allocate page in function hook";
+        case MICROINJECTOR_FUNCTION_HOOK_REMAP_FAILURE: 
+            return "(MicroInjector) Failed to remap in function hook";
+        default:
+            return "(MicroInjector) Unknown status";
+    }
+
+    return "(MicroInjector) Unknown status";
+}

@@ -6,39 +6,37 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MI_EXPORT __attribute__((visibility("default"), used))
-
 static void hook_method_list(Class target, Class hook, Class old);
 
 typedef const void *MSImageRef;
 typedef struct mach_header MSImageHeader;
 
-MI_EXPORT
+MICROINJECTOR_API
 void MSHookMessageEx(Class _class, SEL message, IMP hook, IMP *old) {
     (void)HookMessageEx(_class, message, hook, old);
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 void MSHookMemory(void *target, const void *data, size_t size) {
     (void)HookMemory(target, data, size);
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 void MSHookFunction(void *symbol, void *hook, void **old) {
     (void)HookFunction(symbol, hook, old);
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 MSImageRef MSGetImageByName(const char *file) {
     return (MSImageRef)GetImageByName(file);
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 void *MSFindSymbol(MSImageRef image, const char *name) {
     return FindSymbol((LoadedImageReference)image, name);
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 IMP MSHookMessage(Class _class, SEL sel, IMP imp, const char *prefix) {
     if (_class == NULL || sel == NULL || imp == NULL) {
         return NULL;
@@ -74,7 +72,7 @@ IMP MSHookMessage(Class _class, SEL sel, IMP imp, const char *prefix) {
     return (prefix == NULL) ? original : NULL;
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 void MSHookClassPair(Class target, Class hook, Class old) {
     if (target == NULL || hook == NULL || old == NULL) {
         return;
@@ -88,34 +86,34 @@ void MSHookClassPair(Class target, Class hook, Class old) {
 
 /* === Non-implemented functions === */
 
-MI_EXPORT
+MICROINJECTOR_API
 MSImageRef MSMapImage(const char *file) {
     fprintf(stderr, "MicroInjector: MSMapImage is not implemented\n");
     __builtin_trap();
     return NULL;
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 const MSImageHeader *MSImageAddress(MSImageRef image) {
     fprintf(stderr, "MicroInjector: MSImageAddress is not implemented\n");
     __builtin_trap();
     return NULL;
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 void MSCloseImage(MSImageRef image) {
     fprintf(stderr, "MicroInjector: MSCloseImage is not implemented\n");
     __builtin_trap();
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 char *MSFindAddress(MSImageRef image, void **address) {
     fprintf(stderr, "MicroInjector: MSFindAddress is not implemented\n");
     __builtin_trap();
     return NULL;
 }
 
-MI_EXPORT
+MICROINJECTOR_API
 bool MSHookProcess(pid_t pid, const char *library) {
     fprintf(stderr, "MicroInjector: MSHookProcess is not implemented\n");
     __builtin_trap();
