@@ -48,7 +48,7 @@ static NSString *PSListController_description_hook(id self, SEL _cmd) {
 
 static BOOL PSViewController_popController_first_hook_called = NO;
 static BOOL (*PSViewController_popController_first_orig)(id, SEL) = NULL;
-static BOOL PSViewController_popController_first_hook(id self, SEL _cmd) {
+static BOOL PSViewController_popController_first_hook(__unused id self, __unused SEL _cmd) {
     PSViewController_popController_first_hook_called = YES;
     return YES;
 }
@@ -60,7 +60,7 @@ static BOOL PSViewController_popController_second_hook(id self, SEL _cmd) {
     return PSViewController_popController_second_orig(self, _cmd);
 }
 
-static MicroInjectorTestReturnStruct_t PSViewController_structTest_nonhooked(id self, SEL _cmd) {
+static MicroInjectorTestReturnStruct_t PSViewController_structTest_nonhooked(__unused id self, __unused SEL _cmd) {
     return (MicroInjectorTestReturnStruct_t){
         .boolField = NO,
         .idField = nil,
@@ -69,7 +69,7 @@ static MicroInjectorTestReturnStruct_t PSViewController_structTest_nonhooked(id 
 }
 
 static MicroInjectorTestReturnStruct_t (*PSViewController_structTest_orig)(id, SEL) = NULL;
-static MicroInjectorTestReturnStruct_t PSViewController_structTest_hook(id self, SEL _cmd) {
+static MicroInjectorTestReturnStruct_t PSViewController_structTest_hook(id self, __unused SEL _cmd) {
     return (MicroInjectorTestReturnStruct_t){
         .boolField = YES,
         .idField = self,

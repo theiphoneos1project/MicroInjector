@@ -19,14 +19,14 @@ static void PSSetAirplaneMode_hook(int arg1, int arg2) {
 
 static BOOL Apple80211GetPower_first_hook_called = NO;
 static BOOL (*Apple80211GetPower_first_orig)(int, BOOL *) = NULL;
-static BOOL Apple80211GetPower_first_hook(int arg1, BOOL *arg2) {
+static BOOL Apple80211GetPower_first_hook(__unused int arg1, __unused BOOL *arg2) {
     Apple80211GetPower_first_hook_called = YES;
     return 1;
 }
 
 static BOOL Apple80211GetPower_second_hook_called = NO;
 static BOOL (*Apple80211GetPower_second_orig)(int, BOOL *) = NULL;
-static BOOL Apple80211GetPower_second_hook(int arg1, BOOL *arg2) {
+static BOOL Apple80211GetPower_second_hook(__unused int arg1, __unused BOOL *arg2) {
     Apple80211GetPower_second_hook_called = YES;
     *arg2 = YES;
     return Apple80211GetPower_second_orig(arg1, arg2);

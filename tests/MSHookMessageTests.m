@@ -27,7 +27,7 @@ static void UIApplication_setPickerBundle_hook(id self, SEL _cmd, NSBundle *bund
     UIApplication_setPickerBundle_hook_called = YES;
 }
 
-static NSString *PhotosNavigationItem_description_hook(id self, SEL _cmd) {
+static NSString *PhotosNavigationItem_description_hook(__unused id self, __unused SEL _cmd) {
     return @"Hooked!";
 }
 
