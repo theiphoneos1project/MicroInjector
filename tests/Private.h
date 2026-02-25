@@ -48,9 +48,20 @@ typedef struct {
 - (BOOL)mi_canHandleSwipes;
 @end
 
+@interface CPActivityMonitor : NSObject
++ (id)currentMonitor;
+- (BOOL)shouldCancel;
+@end
+
+@interface CPURLMatch : NSObject
+- (NSRange)range;
+- (NSString *)description;
+@end
+
 void HookMessageExTests(void);
 void HookMemoryTests(void);
 void HookFunctionTests(void);
 void GetImageByNameTests(void);
 void FindSymbolTests(void);
 void MSHookMessageTests(void);
+void MSHookClassPairTests(void);

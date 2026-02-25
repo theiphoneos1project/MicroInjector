@@ -54,6 +54,14 @@ int main(void) {
         NSLog(@"END MSHookMessage tests");
     }
 
+    NSLog(@"============================");
+
+    {
+        NSLog(@"START MSHookClassPair tests");
+        MSHookClassPairTests();
+        NSLog(@"END MSHookClassPair tests");
+    }
+
     NSLog(@"============================");    
     NSLog(@"Passed all tests!");    
 
