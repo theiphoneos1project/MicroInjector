@@ -1,12 +1,17 @@
 #include "MicroInjector.h"
 #include <objc/runtime.h>
+#include <mach-o/loader.h>
+#include <sys/types.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define MI_EXPORT __attribute__((visibility("default"), used))
 
 static void hook_method_list(Class target, Class hook, Class old);
 
 typedef const void *MSImageRef;
+typedef struct mach_header MSImageHeader;
 
 MI_EXPORT
 void MSHookMessageEx(Class _class, SEL message, IMP hook, IMP *old) {
@@ -77,6 +82,42 @@ void MSHookClassPair(Class target, Class hook, Class old) {
     hook_method_list(target, hook, old);
     // Class methods
     hook_method_list(object_getClass((id)target), object_getClass((id)hook), object_getClass((id)old));
+}
+
+/* === Non-implemented functions === */
+
+MI_EXPORT
+MSImageRef MSMapImage(const char *file) {
+    fprintf(stderr, "MicroInjector: MSMapImage is not implemented\n");
+    __builtin_trap();
+    return NULL;
+}
+
+MI_EXPORT
+const MSImageHeader *MSImageAddress(MSImageRef image) {
+    fprintf(stderr, "MicroInjector: MSImageAddress is not implemented\n");
+    __builtin_trap();
+    return NULL;
+}
+
+MI_EXPORT
+void MSCloseImage(MSImageRef image) {
+    fprintf(stderr, "MicroInjector: MSCloseImage is not implemented\n");
+    __builtin_trap();
+}
+
+MI_EXPORT
+char *MSFindAddress(MSImageRef image, void **address) {
+    fprintf(stderr, "MicroInjector: MSFindAddress is not implemented\n");
+    __builtin_trap();
+    return NULL;
+}
+
+MI_EXPORT
+bool MSHookProcess(pid_t pid, const char *library) {
+    fprintf(stderr, "MicroInjector: MSHookProcess is not implemented\n");
+    __builtin_trap();
+    return false;
 }
 
 /* === Private utility functions === */
