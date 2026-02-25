@@ -87,34 +87,34 @@ void MSHookClassPair(Class target, Class hook, Class old) {
 /* === Non-implemented functions === */
 
 MICROINJECTOR_API
-MSImageRef MSMapImage(const char *file) {
+MSImageRef MSMapImage(__unused const char *file) {
     fprintf(stderr, "MicroInjector: MSMapImage is not implemented\n");
     __builtin_trap();
     return NULL;
 }
 
 MICROINJECTOR_API
-const MSImageHeader *MSImageAddress(MSImageRef image) {
+const MSImageHeader *MSImageAddress(__unused MSImageRef image) {
     fprintf(stderr, "MicroInjector: MSImageAddress is not implemented\n");
     __builtin_trap();
     return NULL;
 }
 
 MICROINJECTOR_API
-void MSCloseImage(MSImageRef image) {
+void MSCloseImage(__unused MSImageRef image) {
     fprintf(stderr, "MicroInjector: MSCloseImage is not implemented\n");
     __builtin_trap();
 }
 
 MICROINJECTOR_API
-char *MSFindAddress(MSImageRef image, void **address) {
+char *MSFindAddress(__unused MSImageRef image, __unused void **address) {
     fprintf(stderr, "MicroInjector: MSFindAddress is not implemented\n");
     __builtin_trap();
     return NULL;
 }
 
 MICROINJECTOR_API
-bool MSHookProcess(pid_t pid, const char *library) {
+bool MSHookProcess(__unused pid_t pid, __unused const char *library) {
     fprintf(stderr, "MicroInjector: MSHookProcess is not implemented\n");
     __builtin_trap();
     return false;
