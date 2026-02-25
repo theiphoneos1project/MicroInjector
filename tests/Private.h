@@ -29,8 +29,28 @@ typedef struct {
 - (void)setProperty:(id)property forKey:(NSString *)key;
 @end
 
+@interface PhotosNavigationItem : NSObject
+- (int)barStyle;
+- (void)setBarStyle:(int)barStyle;
+@end
+
+@interface UIApplication : NSObject
++ (NSBundle *)pickerBundle;
++ (void)setPickerBundle:(NSBundle *)pickerBundle;
+@end
+
+@interface BackgroundView : NSObject
+- (void)popNavigationItem;
+@end
+
+@interface PLImageScroller : NSObject
+- (BOOL)canHandleSwipes;
+- (BOOL)mi_canHandleSwipes;
+@end
+
 void HookMessageExTests(void);
 void HookMemoryTests(void);
 void HookFunctionTests(void);
 void GetImageByNameTests(void);
 void FindSymbolTests(void);
+void MSHookMessageTests(void);

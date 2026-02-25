@@ -44,6 +44,16 @@ int main(void) {
         NSLog(@"END FindSymbol tests");
     }
 
+    NSLog(@"============================");
+    NSLog(@"Substrate legacy API shims");
+    NSLog(@"============================");
+
+    {
+        NSLog(@"START MSHookMessage tests");
+        MSHookMessageTests();
+        NSLog(@"END MSHookMessage tests");
+    }
+
     NSLog(@"============================");    
     NSLog(@"Passed all tests!");    
 

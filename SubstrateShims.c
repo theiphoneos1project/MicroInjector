@@ -43,33 +43,35 @@ IMP MSHookMessage(Class _class, SEL sel, IMP imp, const char *prefix) {
     if (_class == NULL || sel == NULL || imp == NULL) {
         return NULL;
     }
+    
+    IMP original = NULL;
+    HookMessageEx(_class, sel, imp, &original);
 
-    Method const method = class_getInstanceMethod(_class, sel);
-    if (method == NULL) {
+    if (original == NULL) {
         return NULL;
     }
 
     if (prefix != NULL) {
         const char *const name = sel_getName(sel);
-        const char *const typeEncoding = method_getTypeEncoding(method);
+        const Method method = class_getInstanceMethod(_class, sel);
         
-        IMP const original = method_getImplementation(method);
+        if (method == NULL) {
+            return NULL;
+        }
+
+        const char *const typeEncoding = method_getTypeEncoding(method);
 
         const size_t prefixLength = strlen(prefix);
         const size_t nameLength = strlen(name);
 
-        char renamedName[prefixLength + nameLength + 1];
-        bcopy(prefix, renamedName, prefixLength);
-        bcopy(name, renamedName + prefixLength, nameLength + 1);
+        char renamed[prefixLength + nameLength + 1];
+        bcopy(prefix, renamed, prefixLength);
+        bcopy(name, renamed + prefixLength, nameLength + 1);
 
-        class_addMethod(_class, sel_registerName(renamedName), original, typeEncoding);
-        method_setImplementation(method, imp);
-        return NULL;
+        class_addMethod(_class, sel_registerName(renamed), original, typeEncoding);
     }
 
-    IMP original = NULL;
-    HookMessageEx(_class, sel, imp, &original);
-    return original;
+    return (prefix == NULL) ? original : NULL;
 }
 
 MI_EXPORT
