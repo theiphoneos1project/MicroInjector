@@ -92,7 +92,7 @@ void MSHookClassPair(Class target, Class hook, Class old) {
 MICROINJECTOR_API
 MSImageRef MSMapImage(__unused const char *file) {
     fprintf(stderr, "MicroInjector: MSMapImage is not implemented\n");
-    __builtin_trap();
+    trap_noreturn();
     return NULL;
 }
 
