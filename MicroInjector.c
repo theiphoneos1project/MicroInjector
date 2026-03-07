@@ -107,11 +107,11 @@ void *FindSymbol(LoadedImageReference handle, const char *name) {
     uint32_t const imageCount = _dyld_image_count();
     for (uint32_t i = 0; i < imageCount; i++) {
         const struct mach_header *const header = _dyld_get_image_header(i);
-        if (handle != NULL && header != (struct mach_header *)handle) {
+        if (handle != NULL && header != (const struct mach_header *const)handle) {
             continue;
         }
 
-        intptr_t const slide = _dyld_get_image_vmaddr_slide(i);
+        const intptr_t slide = _dyld_get_image_vmaddr_slide(i);
         
         const struct symtab_command *symtab = NULL;
         const struct segment_command *linkedit = NULL;
