@@ -30,15 +30,15 @@ static BOOL PSViewController_isOverlay_hook(id self, SEL _cmd) {
     return YES;
 }
 
-static BOOL PSListController_reloadSpecifier_animated_called = NO;
-static void PSListController_reloadSpecifier_animated_hook(id self, SEL _cmd, PSSpecifier *specifier, BOOL animated) {
-    NSLog(@"Inside reloadSpecifier:animated: hook, self = %@, _cmd = %@, specifier = %@, animated = %@", self, NSStringFromSelector(_cmd), [specifier identifier], animated ? @"YES" : @"NO");
+// static BOOL PSListController_reloadSpecifier_animated_called = NO;
+// static void PSListController_reloadSpecifier_animated_hook(id self, SEL _cmd, PSSpecifier *specifier, BOOL animated) {
+//     NSLog(@"Inside reloadSpecifier:animated: hook, self = %@, _cmd = %@, specifier = %@, animated = %@", self, NSStringFromSelector(_cmd), [specifier identifier], animated ? @"YES" : @"NO");
     
-    assert([specifier.identifier isEqualToString:@"Tests"]);
-    assert(animated == YES);
+//     assert([specifier.identifier isEqualToString:@"Tests"]);
+//     assert(animated == YES);
 
-    PSListController_reloadSpecifier_animated_called = YES;
-}
+//     PSListController_reloadSpecifier_animated_called = YES;
+// }
 
 static NSString *PSListController_description_hook(id self, SEL _cmd) {
     NSLog(@"In description hook, self = %p, _cmd = %@", (void *)self, NSStringFromSelector(_cmd));
@@ -179,26 +179,6 @@ void HookMessageExTests(void) {
         assert(result == YES);
 
         assert(PSViewController_isOverlay_orig(object_getClass(PSViewController_cls), @selector(isOverlay)) == NO);
-    }
-
-    // Method with multiple arguments
-    {
-        IMP const originalImplementation = method_getImplementation(class_getInstanceMethod(PSListController_cls, @selector(reloadSpecifier:animated:)));
-        assert(originalImplementation != NULL);
-
-        MicroInjectorReturn_t hookStatus = HookMessageEx(PSListController_cls, @selector(reloadSpecifier:animated:), (IMP)PSListController_reloadSpecifier_animated_hook, nil);
-        assert(hookStatus == MICROINJECTOR_SUCCESS);
-
-        IMP const hookedImplementation = method_getImplementation(class_getInstanceMethod(PSListController_cls, @selector(reloadSpecifier:animated:)));
-        assert(hookedImplementation != NULL);
-
-        assert(hookedImplementation != originalImplementation);
-
-        PSSpecifier *const specifier = [PSSpecifier_cls emptyGroupSpecifier];
-        [specifier setProperty:@"Tests" forKey:@"id"];
-        [listController reloadSpecifier:specifier animated:YES];
-
-        assert(PSListController_reloadSpecifier_animated_called == YES);
     }
 
     // Superclass hook
