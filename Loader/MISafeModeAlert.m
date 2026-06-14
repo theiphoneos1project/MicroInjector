@@ -29,7 +29,7 @@ static void MISafeModeAlertItem_alertSheet_buttonClicked_(SBAlertItem *self, __u
     switch (button) {
         case 1: {
             remove(SAFE_MODE_MARKER_PATH);
-            [[objc_getClass("SBApplication") springBoard] relaunchSpringBoard];
+            exit(0);
             
             break;
         }
