@@ -1,3 +1,7 @@
+//
+// Copyright (c) 2026 Nightwind
+//
+
 #include "../MicroInjector.h"
 #include "Private.h"
 #include <Foundation/Foundation.h>
@@ -29,16 +33,6 @@ static BOOL PSViewController_isOverlay_hook(id self, SEL _cmd) {
     NSLog(@"Inside isOverlay hook, self = %@, _cmd = %@", self, NSStringFromSelector(_cmd));
     return YES;
 }
-
-// static BOOL PSListController_reloadSpecifier_animated_called = NO;
-// static void PSListController_reloadSpecifier_animated_hook(id self, SEL _cmd, PSSpecifier *specifier, BOOL animated) {
-//     NSLog(@"Inside reloadSpecifier:animated: hook, self = %@, _cmd = %@, specifier = %@, animated = %@", self, NSStringFromSelector(_cmd), [specifier identifier], animated ? @"YES" : @"NO");
-    
-//     assert([specifier.identifier isEqualToString:@"Tests"]);
-//     assert(animated == YES);
-
-//     PSListController_reloadSpecifier_animated_called = YES;
-// }
 
 static NSString *PSListController_description_hook(id self, SEL _cmd) {
     NSLog(@"In description hook, self = %p, _cmd = %@", (void *)self, NSStringFromSelector(_cmd));

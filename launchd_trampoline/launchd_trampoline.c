@@ -1,3 +1,7 @@
+//
+// Copyright (c) 2026 Nightwind
+//
+
 #include <stdint.h>
 #include <dlfcn.h>
 #include <mach-o/dyld.h>

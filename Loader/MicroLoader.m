@@ -1,3 +1,7 @@
+//
+// Copyright (c) 2026 Nightwind
+//
+
 #include <UIKit/UIKit.h>
 #include <objc/runtime.h>
 #include <mach-o/dyld.h>

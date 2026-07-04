@@ -1,3 +1,7 @@
+//
+// Copyright (c) 2026 Nightwind
+//
+
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 #import "MISafeModeAlert.h"

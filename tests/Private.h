@@ -1,3 +1,7 @@
+//
+// Copyright (c) 2026 Nightwind
+//
+
 #import <Foundation/Foundation.h>
 
 typedef struct {

@@ -1,3 +1,7 @@
+//
+// Copyright (c) 2026 Nightwind
+//
+
 #ifndef MICROINJECTOR_H
 #define MICROINJECTOR_H
 

@@ -1,7 +1,9 @@
+//
+// Thanks to staturnz for the huge amount of help!
+//
+
 #ifndef MICROINJECTOR_INTERNAL_H
 #define MICROINJECTOR_INTERNAL_H
-
-// Big thanks to staturnz
 
 #include <stdint.h>
 #include <stdbool.h>

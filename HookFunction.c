@@ -1,4 +1,6 @@
-// Big thanks to staturnz
+//
+// Thanks to staturnz for the huge amount of help!
+//
 
 #include "MicroInjector.h"
 #include "MicroInjectorInternal.h"

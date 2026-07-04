@@ -1,3 +1,7 @@
+//
+// Copyright (c) 2026 Nightwind
+//
+
 #include "Private.h"
 #include <Foundation/Foundation.h>
 #include <objc/runtime.h>
