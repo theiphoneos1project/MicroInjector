@@ -134,6 +134,8 @@ static void install_hook(void *const from, const void *const to, MicroInjectorHo
             data[2] = T16_BX_R7;
             *(volatile uint32_t *)(((uint32_t)THUMB_ALIGN(from)) + 0x6) = (uint32_t)to;
         } break;
+
+        case MICROINJECTOR_HOOK_TYPE_NONE:
         default: break;
     }
 }
