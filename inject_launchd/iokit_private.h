@@ -1,3 +1,7 @@
+//
+// Thanks to EthanArbuckle for the huge amount of help!
+//
+
 #ifndef IOKIT_PRIVATE_H
 #define IOKIT_PRIVATE_H
 

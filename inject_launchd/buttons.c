@@ -1,3 +1,7 @@
+//
+// Thanks to EthanArbuckle for the huge amount of help!
+//
+
 #include <mach/mach_time.h>
 
 #include "buttons.h"

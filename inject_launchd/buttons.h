@@ -1,3 +1,7 @@
+//
+// Thanks to EthanArbuckle for the huge amount of help!
+//
+
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
