@@ -24,8 +24,9 @@ TRAMPOLINE_SRC := launchd_trampoline/launchd_trampoline.c
 TRAMPOLINE_OUT := launchd_trampoline/launchd_trampoline.dylib
 TRAMPOLINE_LDFLAGS := -dynamiclib $(LIBMICROINJECTOR_OUT) -lobjc -framework UIKit -framework Foundation -framework CoreFoundation
 
-INJECT_SRC := inject_launchd/inject_launchd.c inject_launchd/task_primitives.c
+INJECT_SRC := inject_launchd/inject_launchd.c inject_launchd/task_primitives.c inject_launchd/buttons.c
 INJECT_OUT := inject_launchd/inject_launchd
+INJECT_LDFLAGS := -framework IOKit -framework CoreFoundation
 
 TEST_SRC := $(wildcard tests/*.m)
 
@@ -46,7 +47,7 @@ $(TRAMPOLINE_OUT): $(TRAMPOLINE_SRC) $(LIBMICROINJECTOR_OUT)
 	strip -x $@
 
 $(INJECT_OUT): $(INJECT_SRC)
-	$(CC) $(INJECT_SRC) $(CFLAGS) -o $@
+	$(CC) $(INJECT_SRC) $(CFLAGS) $(INJECT_LDFLAGS) -o $@
 	strip -x $@
 
 $(PXL_INSTROOT):

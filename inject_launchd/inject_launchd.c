@@ -9,6 +9,7 @@
 #include <spawn.h>
 
 #include "task_primitives.h"
+#include "buttons.h"
 
 extern void __pthread_set_self(void);
 
@@ -35,6 +36,11 @@ static const uint32_t SHELLCODE_BASE[] = {
 };
 
 int main(void) {
+    if (IsButtonPressed(kHIDUsage_Csmr_Menu) || IsButtonPressed(kHIDUsage_Csmr_VolumeIncrement) || IsButtonPressed(kHIDUsage_Csmr_VolumeDecrement)) {
+        fprintf(stdout, "[+] Button pressed, aborting injection\n");
+        return EXIT_SUCCESS;
+    }
+
     int status = EXIT_FAILURE;
     uint8_t *shellcodeData = NULL;
     
