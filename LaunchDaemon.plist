@@ -8,5 +8,11 @@
 	<string>/Library/MicroInjector/inject_launchd</string>
 	<key>RunAtLoad</key>
 	<true/>
+	
+	<key>StandardOutPath</key>
+	<string>/tmp/microinjector.log</string>
+
+	<key>StandardErrorPath</key>
+	<string>/tmp/microinjector.log</string>
 </dict>
 </plist>
