@@ -78,7 +78,7 @@
 	<key>RDPxlPackageName</key>
 	<string>MicroInjector</string>
 	<key>RDPxlPackageVersion</key>
-	<string>0.0.1</string>
+	<string>0.0.2</string>
 	<key>RDPxlPackageDesc</key>
 	<string>Code injection platform for iPhone OS 1</string>
 	<key>RDPxlPackageFormat</key>
