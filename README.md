@@ -8,6 +8,8 @@ Tested on:
 
 The public-facing header with native functions is located at [MicroInjector.h](MicroInjector.h). Shims for Cydia Substrate are implemented in [SubstrateShims.c](SubstrateShims.c).
 
+To abort injection during boot, please hold either the home button, the volume down button, or the volume up button as soon as you power on the device.
+
 ### How to install
 Head over to the [Releases](https://github.com/theiphoneos1project/MicroInjector/releases) section and download the `.PXL`. Install it with iBrickr using Windows XP.
 
